@@ -23,7 +23,7 @@ jobs:
 
       - name: 📦 Build & Test Spring Boot with JaCoCo
         working-directory: ./back
-        run: ./mvnw clean verify
+        run: mvn clean verify
 
       - name: 📤 Upload JaCoCo Coverage Report
         uses: actions/upload-artifact@v4
