@@ -58,7 +58,7 @@ jobs:
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+        node-version: '18'
 
       - name: Install dependencies
         working-directory: ./front
@@ -68,11 +68,17 @@ jobs:
         working-directory: ./front
         run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
+      - name: Setup Java 17 for SonarScanner
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          echo "/usr/lib/jvm/java-17-openjdk-amd64/bin" >> $GITHUB_PATH
+
       - name: Install SonarScanner CLI
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner.zip
-          export PATH="$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin"
 
       - name: Run SonarScanner for Frontend
         working-directory: ./front
@@ -84,3 +90,4 @@ jobs:
           -Dsonar.organization=yassine-berriri \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
