@@ -58,7 +58,7 @@ jobs:
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
-        node-version: '18'
+          node-version: '18'
 
       - name: Install dependencies
         working-directory: ./front
@@ -86,8 +86,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ../sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
-          -Dsonar.projectKey=yassine-berriri_BobApp \
-          -Dsonar.organization=yassine-berriri \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-
+            -Dsonar.projectKey=yassine-berriri_BobApp \
+            -Dsonar.organization=yassine-berriri \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
