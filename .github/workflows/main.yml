@@ -64,18 +64,33 @@ jobs:
         run: mvn clean install
         working-directory: ./back
 
-      - name: Run tests
-        run: mvn -B clean verify
+
+      - name: Generate Jacoco report
+        run: mvn test jacoco:report
         working-directory: ./back
-
-
 
       - name: Upload Jacoco report
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: back/target/site/jacoco/jacoco.xml
+          path: back/target/site/jacoco
 
+
+
+  sonarcloud:
+    name: Analyze Backend + Frontend in SonarCloud
+    runs-on: ubuntu-latest
+    needs: [angular, java]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run tests and generate back report
+        working-directory: back
+        run: mvn -B clean verify
+      
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -90,17 +105,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-  sonarcloud:
-    name: Analyze Backend + Frontend in SonarCloud
-    runs-on: ubuntu-latest
-    needs: [angular, java]
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - name: Download Angular coverage
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-
-
+          name: angular-coverage
+          path: front/coverage/bobapp
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -112,26 +121,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
-      - name: Download Jacoco report
-        uses: actions/download-artifact@v4
-        with:
-          name: jacoco-report
-          path: back/target/site/jacoco
-
-      - name: Download Angular coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: angular-coverage
-          path: front/coverage/bobapp
-
-      - name: Compile backend before SonarCloud scan
-        run: mvn clean compile
+      
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./back
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=yassine-berriri_BobApp
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        
-            
+        with:
+          projectBaseDir: .
