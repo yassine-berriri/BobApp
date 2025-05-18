@@ -28,7 +28,8 @@ module.exports = function (config) {
       dir: require('path').join(__dirname, './coverage/bobapp'),
       subdir: '.',
       reporters: [
-        { type: 'lcov', subdir: '.' },
+        { type: 'html' },
+        { type: 'lcovonly', subdir: '.', file: 'lcov.info' },
         { type: 'text-summary' }
       ]
     },
@@ -37,8 +38,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
+    browsers: ['ChromeHeadless'],
+    singleRun: true,
     restartOnFileChange: true
   });
 };
