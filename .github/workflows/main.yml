@@ -23,6 +23,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Clear Maven cache
+        run: mvn dependency:purge-local-repository
+
       - name: 📦 Build & Test Spring Boot with JaCoCo
         working-directory: ./back
         run: mvn clean verify
