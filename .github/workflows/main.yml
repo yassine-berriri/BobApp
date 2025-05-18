@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: angular-coverage
-          path: front/coverage/
+          path: front/coverage/bobapp/lcov.info
 
   java:
     name: Spring Boot
@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: back/target/site/jacoco
+          path: back/target/site/jacoco/jacoco.xml
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
