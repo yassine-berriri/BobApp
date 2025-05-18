@@ -111,6 +111,10 @@ jobs:
         with:
           node-version: 18
 
+      - name: Compile backend before SonarCloud scan
+        run: mvn clean compile
+        working-directory: ./back
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
