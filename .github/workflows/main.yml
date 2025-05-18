@@ -32,9 +32,10 @@ jobs:
         run: npm ci
         working-directory: ./front
 
-      - name: Run tests
-        run: npm run test -- --browsers=ChromeHeadless --code-coverage
+      - name: 🧪 Run Angular tests with coverage
         working-directory: ./front
+        run: |
+          npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
       - name: 📤 Upload Angular Coverage Report
         uses: actions/upload-artifact@v4
