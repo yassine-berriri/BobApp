@@ -64,12 +64,8 @@ jobs:
         run: mvn clean install
         working-directory: ./back
 
-      - name: Run tests
-        run: mvn test
-        working-directory: ./back
-
       - name: Generate Jacoco report
-        run: mvn jacoco:report
+        run: mvn verify
         working-directory: ./back
 
       - name: Upload Jacoco report
