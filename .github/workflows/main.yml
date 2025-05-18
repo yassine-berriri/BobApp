@@ -64,8 +64,12 @@ jobs:
         run: mvn clean install
         working-directory: ./back
 
+      - name: Run tests
+        run: mvn test
+        working-directory: ./back
+
       - name: Generate Jacoco report
-        run: mvn verify
+        run: mvn jacoco:report
         working-directory: ./back
 
       - name: Upload Jacoco report
@@ -136,7 +140,6 @@ jobs:
             -Dsonar.tests=back/src/test/java,front/src
             -Dsonar.language=java,js,ts
             -Dsonar.java.binaries=back/target/classes
-            -Dsonar.coverage.jacoco.xmlReportPaths=back/target/site/jacoco/jacoco.xml
             -Dsonar.javascript.lcov.reportPaths=front/coverage/bobapp/lcov.info
             -Dsonar.test.inclusions=front/src/**/*.spec.ts
             -Dsonar.exclusions=**/node_modules/**,front/src/polyfills.ts
