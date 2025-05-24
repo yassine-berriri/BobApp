@@ -135,3 +135,29 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: .
+          
+    docker:
+      name: Build and Push Docker Images
+      runs-on: ubuntu-latest
+      needs: [angular, java]
+      steps:
+        - name: Checkout the source code
+          uses: actions/checkout@v4
+
+        - name: Log in to DockerHub
+          run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Build and push Angular image
+        - name: Build Angular Docker image
+          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bobapp-frontend:latest ./front
+
+        - name: Push Angular Docker image
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/bobapp-frontend:latest
+
+      # Build and push Spring Boot image
+        - name: Build Spring Boot Docker image
+          run: docker build -t ${{ secrets.DOCKER_USERNAME }}/bobapp-backend:latest ./back
+
+        - name: Push Spring Boot Docker image
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/bobapp-backend:latest
+
